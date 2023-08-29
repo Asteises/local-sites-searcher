@@ -1,0 +1,29 @@
+server:
+  port: 8083
+
+logging:
+  level:
+    root: warn
+    ru: debug
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    # localhost
+    url: jdbc:postgresql://localhost:5432/localsitesearch
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        hbm2ddl:
+          auto: validate
+    defer-datasource-initialization: false
+    open-in-view: false
+  mandatory-file-encoding: UTF-8
