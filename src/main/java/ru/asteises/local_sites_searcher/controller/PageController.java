@@ -1,5 +1,6 @@
 package ru.asteises.local_sites_searcher.controller;
 
+import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -8,13 +9,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.asteises.local_sites_searcher.service.PageService;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController()
 @RequestMapping("/api/search")
+@AllArgsConstructor
 public class PageController {
+
+    private final PageService pageService;
 
     // TODO Можно сохранять данные о сайтах в БД, чтобы было проще искать по ним информацию. Правда как потом проверять, не произошли ли изменения на странице.
 
@@ -33,17 +38,12 @@ public class PageController {
     }
 
     /**
-     * Метод ищет нужное словосочетание по сайту
-     * @return
-     * @throws IOException
+     * Метод ищет нужное словосочетание по заголовку (title) страницы сайта.
+     * @return возвращаем заголовок.
+     * @throws IOException Внимание!
      */
-    @GetMapping("/title")
-    public ResponseEntity<String> getDataFromTitle() throws IOException {
-        // TODO Сделать подключение к сайтам отдельным методомо
-        String blogUrl = "https://bootlegbricks.ru/";
-        Document doc = Jsoup.connect(blogUrl).get();
-        int code = doc.connection().response().statusCode();
-        System.out.println(code);
-        return ResponseEntity.ok(doc.title());
+    @GetMapping("/in_title")
+    public ResponseEntity<String> getDataFromTitle(@RequestParam String word) throws IOException {
+        return ResponseEntity.ok(pageService.searchInTitle(word));
     }
 }
