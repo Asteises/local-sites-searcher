@@ -5,10 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.asteises.local_sites_searcher.service.PageService;
 
 import java.io.IOException;
@@ -42,8 +39,8 @@ public class PageController {
      * @return возвращаем заголовок.
      * @throws IOException Внимание!
      */
-    @GetMapping("/in_title")
-    public ResponseEntity<String> getDataFromTitle(@RequestParam String word) throws IOException {
-        return ResponseEntity.ok(pageService.searchInTitle(word));
+    @PostMapping("/in_title")
+    public ResponseEntity<List<String>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) throws IOException {
+        return ResponseEntity.ok(pageService.searchInTitle(urls, word));
     }
 }
