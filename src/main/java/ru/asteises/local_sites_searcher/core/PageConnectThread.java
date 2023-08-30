@@ -5,20 +5,20 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
-public class PageThread implements Runnable {
+public class PageConnectThread implements Runnable {
 
     private final Thread thrd;
     private final String url;
     private Document document;
 
-    public PageThread(String name, String url) {
+    public PageConnectThread(String name, String url) {
         thrd = new Thread(this, name);
         this.url = url;
     }
 
-    public static PageThread createAndStart(String url) {
+    public static PageConnectThread createAndStart(String url) {
         System.out.println("Create and start new Thread for: " + url);
-        return new PageThread("Thread: " + url, url);
+        return new PageConnectThread("Thread: " + url, url);
     }
 
     public String getUrl() {

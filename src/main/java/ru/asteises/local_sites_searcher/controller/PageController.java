@@ -6,6 +6,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.asteises.local_sites_searcher.core.model.Page;
 import ru.asteises.local_sites_searcher.service.PageService;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class PageController {
      * @throws IOException Внимание!
      */
     @PostMapping("/in_title")
-    public ResponseEntity<List<String>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) throws IOException {
-        return ResponseEntity.ok(pageService.searchInTitle(urls, word));
+    public ResponseEntity<List<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) throws IOException {
+        return ResponseEntity.ok(pageService.searchData(urls, word));
     }
 }
