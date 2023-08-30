@@ -4,6 +4,5 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PageService {
-
     List<String> searchInTitle(List<String> urls, String word) throws IOException;
 }

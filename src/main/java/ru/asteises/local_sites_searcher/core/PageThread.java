@@ -17,9 +17,8 @@ public class PageThread implements Runnable {
     }
 
     public static PageThread createAndStart(String url) {
-        PageThread pageThread = new PageThread("Поток для: " + url, url);
-        pageThread.thrd.start();
-        return pageThread;
+        System.out.println("Create and start new Thread for: " + url);
+        return new PageThread("Thread: " + url, url);
     }
 
     public String getUrl() {
@@ -37,7 +36,9 @@ public class PageThread implements Runnable {
     @Override
     public void run() {
         try {
-            setDocument(Jsoup.connect(getUrl()).get());
+            System.out.println("Run new Thread: ");
+            Document doc = Jsoup.connect(getUrl()).get();
+            setDocument(doc);
         } catch (IOException e) {
             e.printStackTrace();
         }
