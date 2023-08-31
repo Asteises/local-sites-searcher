@@ -1,11 +1,6 @@
 package ru.asteises.local_sites_searcher.core.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +29,9 @@ public class Page {
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "web_site_id")
+    private UUID webSiteId;
 
     @Override
     public boolean equals(Object o) {

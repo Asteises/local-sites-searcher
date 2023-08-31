@@ -7,17 +7,18 @@ import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.asteises.local_sites_searcher.core.model.Page;
-import ru.asteises.local_sites_searcher.service.PageService;
+import ru.asteises.local_sites_searcher.service.SearchService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController()
 @RequestMapping("/api/search")
 @AllArgsConstructor
 public class PageController {
 
-    private final PageService pageService;
+    private final SearchService searchService;
 
     // TODO Можно сохранять данные о сайтах в БД, чтобы было проще искать по ним информацию. Правда как потом проверять, не произошли ли изменения на странице.
 
@@ -37,11 +38,12 @@ public class PageController {
 
     /**
      * Метод ищет нужное словосочетание по заголовку (title) страницы сайта.
+     *
      * @return возвращаем заголовок.
      * @throws IOException Внимание!
      */
     @PostMapping("/in_title")
-    public ResponseEntity<List<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) throws IOException {
-        return ResponseEntity.ok(pageService.searchData(urls, word));
+    public ResponseEntity<Set<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
+        return ResponseEntity.ok(searchService.search(urls, word));
     }
 }

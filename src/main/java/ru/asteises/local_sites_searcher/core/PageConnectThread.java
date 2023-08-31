@@ -4,6 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.time.LocalTime;
 
 public class PageConnectThread implements Runnable {
 
@@ -18,7 +19,10 @@ public class PageConnectThread implements Runnable {
 
     public static PageConnectThread createAndStart(String url) {
         System.out.println("Create and start new Thread for: " + url);
-        return new PageConnectThread("Thread: " + url, url);
+        PageConnectThread pageConnectThread = new PageConnectThread("Thread: " + url, url);
+        pageConnectThread.getThrd().start();
+        System.out.println("Поток начал свою работу в :" + LocalTime.now());
+        return pageConnectThread;
     }
 
     public String getUrl() {
@@ -36,12 +40,16 @@ public class PageConnectThread implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Run new Thread: ");
+            System.out.println("Run new Thread: " + getThrd().getState() + ", Thread num: " + getThrd().getId());
             Document doc = Jsoup.connect(getUrl()).get();
             setDocument(doc);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
+    public Thread getThrd() {
+        return thrd;
+    }
 }

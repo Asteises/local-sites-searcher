@@ -2,13 +2,18 @@ package ru.asteises.local_sites_searcher.service;
 
 import org.jsoup.nodes.Document;
 import ru.asteises.local_sites_searcher.core.model.Page;
+import ru.asteises.local_sites_searcher.core.model.WebSite;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 public interface PageService {
-    List<Page> searchData(List<String> urls, String word) throws IOException;
+
+    Set<Page> incomeNewPages(Set<WebSite> newWebSites) throws IOException, InterruptedException;
 
     Page parseData(Document document);
+
+    Set<String> getAnchors(Document document);
+
     Page savePage(Page pages);
 }

@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS page
-(
-    id UUID PRIMARY KEY,
-    path TEXT NOT NULL,
-    code INT NOT NULL,
-    content TEXT NOT NULL
-);
