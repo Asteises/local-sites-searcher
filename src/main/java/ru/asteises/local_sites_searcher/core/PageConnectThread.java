@@ -43,7 +43,8 @@ public class PageConnectThread implements Runnable {
             System.out.println("Run new Thread: " + getThrd().getState() + ", Thread num: " + getThrd().getId());
             Document doc = Jsoup.connect(getUrl()).get();
             setDocument(doc);
-        } catch (IOException e) {
+            Thread.sleep(500);
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
 

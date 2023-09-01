@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,7 +25,19 @@ public class WebSite {
 
     private String theme;
 
-    @OneToMany(mappedBy = "webSiteId", cascade = CascadeType.ALL)
-    @JoinColumn(name = "web_site_id")
-    private Set<Page> pagesId;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "webSite", cascade = CascadeType.ALL)
+    private Set<Page> pages;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WebSite webSite = (WebSite) o;
+        return id.equals(webSite.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

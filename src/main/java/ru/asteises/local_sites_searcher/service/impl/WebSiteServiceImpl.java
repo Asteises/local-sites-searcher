@@ -66,7 +66,7 @@ public class WebSiteServiceImpl implements WebSiteService {
         webSite.setId(UUID.randomUUID());
         webSite.setName(url);
         webSite.setTheme(theme);
-        webSite.setPagesId(new HashSet<>());
+        webSite.setPages(new HashSet<>());
         return webSite;
     }
 

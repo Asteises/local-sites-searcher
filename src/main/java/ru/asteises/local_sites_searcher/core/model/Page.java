@@ -30,8 +30,9 @@ public class Page {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "web_site_id")
-    private UUID webSiteId;
+    @ManyToOne
+    @JoinColumn(name = "web_site_id", nullable = false)
+    private WebSite webSite;
 
     @Override
     public boolean equals(Object o) {

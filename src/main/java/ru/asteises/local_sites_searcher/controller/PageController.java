@@ -7,18 +7,22 @@ import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.asteises.local_sites_searcher.core.model.Page;
+import ru.asteises.local_sites_searcher.service.PageService;
 import ru.asteises.local_sites_searcher.service.SearchService;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController()
-@RequestMapping("/api/search")
+@RequestMapping("/api/page")
 @AllArgsConstructor
 public class PageController {
 
     private final SearchService searchService;
+
+    private final PageService pageService;
 
     // TODO Можно сохранять данные о сайтах в БД, чтобы было проще искать по ним информацию. Правда как потом проверять, не произошли ли изменения на странице.
 
@@ -45,5 +49,15 @@ public class PageController {
     @PostMapping("/in_title")
     public ResponseEntity<Set<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
         return ResponseEntity.ok(searchService.search(urls, word));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<Set<Page>> renewPagesDataBase(@RequestBody Set<UUID> webSitesIds) {
+        return ResponseEntity.ok(pageService.renewPagesDataBase(webSitesIds));
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<List<String>> testConn(@RequestParam String id) {
+        return ResponseEntity.ok(pageService.getAnchors(id));
     }
 }
