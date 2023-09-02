@@ -7,5 +7,5 @@ import java.util.Set;
 
 public interface SearchService {
 
-    Set<Page> search(List<String> urls, String word);
+    List<Page> search(List<String> urls, String word);
 }

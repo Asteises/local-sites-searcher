@@ -7,17 +7,17 @@ import java.util.Set;
 
 public interface WebSiteService {
 
-    Set<WebSite> incomeNewWebSites(List<String> urls);
+    List<WebSite> incomeNewWebSites(List<String> urls);
 
     boolean checkWebSiteExist(String name);
 
-    Set<String> checkWebSiteExist(List<String> urls);
+    List<String> checkWebSiteExist(List<String> urls);
 
     WebSite createWebSite(String url, String theme);
 
-    Set<WebSite> createWebSite(Set<String> urls);
+    List<WebSite> createWebSite(List<String> urls);
 
     WebSite saveWebSite(WebSite webSite);
 
-    Set<WebSite> saveWebSite(Set<WebSite> newWebSites);
+    List<WebSite> saveWebSite(List<WebSite> newWebSites);
 }

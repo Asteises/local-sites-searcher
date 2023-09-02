@@ -12,7 +12,6 @@ import ru.asteises.local_sites_searcher.service.SearchService;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RestController()
@@ -47,13 +46,14 @@ public class PageController {
      * @throws IOException Внимание!
      */
     @PostMapping("/in_title")
-    public ResponseEntity<Set<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
+    public ResponseEntity<List<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
         return ResponseEntity.ok(searchService.search(urls, word));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Set<Page>> renewPagesDataBase(@RequestBody Set<UUID> webSitesIds) {
-        return ResponseEntity.ok(pageService.renewPagesDataBase(webSitesIds));
+    public ResponseEntity<String> renewPagesDataBase(@RequestBody List<UUID> webSitesIds) {
+        pageService.renewPagesDataBase(webSitesIds);
+        return ResponseEntity.ok("Everything OK");
     }
 
     @GetMapping("/get")

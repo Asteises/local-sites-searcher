@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "web_site")
@@ -26,7 +24,7 @@ public class WebSite {
     private String theme;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "webSite", cascade = CascadeType.ALL)
-    private Set<Page> pages;
+    private Set<Page> pages = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

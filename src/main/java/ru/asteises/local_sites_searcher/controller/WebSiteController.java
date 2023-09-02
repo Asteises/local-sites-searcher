@@ -20,7 +20,7 @@ public class WebSiteController {
     private final WebSiteService webSiteService;
 
     @PostMapping("/add")
-    public ResponseEntity<Set<WebSite>> renewWebSiteDataBase(@RequestBody List<String> urls) {
+    public ResponseEntity<List<WebSite>> renewWebSiteDataBase(@RequestBody List<String> urls) {
         return ResponseEntity.ok(webSiteService.incomeNewWebSites(urls));
     }
 }

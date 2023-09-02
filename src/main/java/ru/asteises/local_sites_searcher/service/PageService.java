@@ -10,13 +10,13 @@ import java.util.UUID;
 
 public interface PageService {
 
-    Set<Page> renewPagesDataBase(Set<UUID> webSiteIds);
+    Set<Page> renewPagesDataBase(List<UUID> webSiteIds);
 
     Set<Page> getPages(Set<String> anchors, WebSite webSite);
 
-    Page parseData(Document document, WebSite webSite);
+    Page parseData(Document document, WebSite webSite, String anchor);
 
-    Set<String> getAnchors(Document document, String anchor);
+    List<String> getAnchors(Document document, String anchor);
 
     List<String> getAnchors(String url);
 
@@ -24,5 +24,5 @@ public interface PageService {
 
     Page savePage(Page pages);
 
-    Set<Page> savePages(Set<Page> pages);
+    List<Page> savePages(List<Page> pages);
 }

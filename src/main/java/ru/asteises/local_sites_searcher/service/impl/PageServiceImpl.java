@@ -2,6 +2,7 @@ package ru.asteises.local_sites_searcher.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import ru.asteises.local_sites_searcher.repo.WebSiteStorage;
 import ru.asteises.local_sites_searcher.service.PageService;
 import ru.asteises.local_sites_searcher.service.WebSiteConnect;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ public class PageServiceImpl implements PageService, WebSiteConnect {
     private final WebSiteStorage webSiteStorage;
 
     @Override
-    public Set<Page> renewPagesDataBase(Set<UUID> webSiteIds) {
+    public Set<Page> renewPagesDataBase(List<UUID> webSiteIds) {
         List<WebSite> webSites = webSiteStorage.findAllById(webSiteIds);
         Set<Page> pages = new HashSet<>();
         for (WebSite webSite : webSites) {
@@ -34,39 +36,30 @@ public class PageServiceImpl implements PageService, WebSiteConnect {
         return pages;
     }
 
-    @Override
     public Set<Page> getPages(Set<String> anchors, WebSite webSite) {
-        Set<Page> pages = new HashSet<>();
-        Set<String> pageAnchors = new HashSet<>();
-        Set<String> onSitePageAnchors = webSite.getPages().stream()
-                .map(Page::getPath)
-                .collect(Collectors.toSet());
-        log.info("Anchors on site: " + onSitePageAnchors.toString());
-        if (anchors.isEmpty()) {
-            return Collections.emptySet();
-        }
-        for (String anchor : anchors) {
-            if (onSitePageAnchors.contains(anchor)) {
-                log.info("Anchor already exist in site pages " + anchor);
-                continue;
+        log.info("income anchors: " + anchors.toString());
+        try {
+            for (String anchor : anchors) {
+                Document document = Jsoup.connect(anchor).get();
+                Page newPage = parseData(document, webSite, anchor);
+                pageStorage.save(newPage);
+                Set<String> newAnchors = new HashSet<>(getAnchors(document, webSite.getName()));
+                log.info("new anchors: " + newAnchors);
+                webSite.getPages().add(newPage);
+                Set<Page> pages = webSite.getPages();
+                List<String> onSiteAnchors = pages.stream().map(Page::getPath).toList();
+                log.info("total site anchors: " + onSiteAnchors.toString());
+                newAnchors.removeAll(new HashSet<>(onSiteAnchors));
+                log.info("new anchors after remove on site anchors: " + newAnchors);
+                if (!newAnchors.isEmpty()) {
+                    getPages(newAnchors, webSite);
+                }
             }
-            Document document = getConnection(anchor);
-            if (document != null) {
-                Page page = parseData(document, webSite);
-                pages.add(page);
-                pageAnchors = getAnchors(document, anchor);
-                log.info("New anchors: " + pageAnchors.toString());
-                pageAnchors.removeAll(onSitePageAnchors);
-                log.info("After removeAll new anchors: " + pageAnchors.toString());
-            } else {
-                System.out.println("Cant parse page: " + anchor);
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-//        savePages(pages);
-        webSite.setPages(pages);
         webSiteStorage.save(webSite);
-        getPages(pageAnchors, webSite);
-        return pages;
+        return new HashSet<>(webSite.getPages());
     }
 
     /**
@@ -96,10 +89,11 @@ public class PageServiceImpl implements PageService, WebSiteConnect {
      * @return
      */
     @Override
-    public Page parseData(Document document, WebSite webSite) {
+    public Page parseData(Document document, WebSite webSite, String anchor) {
         Page page = new Page();
         page.setId(UUID.randomUUID());
-        page.setPath(document.baseUri());
+        page.setPath(anchor);
+        log.info("Base uri: " + document.baseUri());
         page.setCode(document.connection().response().statusCode());
         page.setContent(document.text());
         page.setWebSite(webSite);
@@ -114,13 +108,14 @@ public class PageServiceImpl implements PageService, WebSiteConnect {
      * @return
      */
     @Override
-    public Set<String> getAnchors(Document document, String anchor) {
-        Set<String> anchors;
-        Elements tempAnchors = document.select("a");
+    public List<String> getAnchors(Document document, String siteAnchor) {
+        List<String> anchors;
+        Elements tempAnchors = document.getAllElements();
         anchors = tempAnchors.stream()
-                .map(a -> a.attr("href"))
-                .collect(Collectors.toSet());
-        anchors.removeIf(newAnchor -> !newAnchor.contains(anchor));
+                .map(a -> a.absUrl("href"))
+                .collect(Collectors.toList());
+        anchors.removeIf(newAnchor -> !newAnchor.contains(siteAnchor));
+        anchors.removeIf(a -> a.contains("png"));
         return anchors;
     }
 
@@ -158,7 +153,7 @@ public class PageServiceImpl implements PageService, WebSiteConnect {
     }
 
     @Override
-    public Set<Page> savePages(Set<Page> pages) {
+    public List<Page> savePages(List<Page> pages) {
         pageStorage.saveAll(pages);
         return pages;
     }

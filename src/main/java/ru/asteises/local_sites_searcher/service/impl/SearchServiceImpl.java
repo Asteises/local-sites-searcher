@@ -18,7 +18,7 @@ public class SearchServiceImpl implements SearchService {
     private final PageService pageService;
 
     @Override
-    public Set<Page> search(List<String> urls, String word) {
+    public List<Page> search(List<String> urls, String word) {
         return null;
     }
 }

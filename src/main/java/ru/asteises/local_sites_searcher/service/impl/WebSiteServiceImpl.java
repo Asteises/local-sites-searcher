@@ -6,10 +6,7 @@ import ru.asteises.local_sites_searcher.core.model.WebSite;
 import ru.asteises.local_sites_searcher.repo.WebSiteStorage;
 import ru.asteises.local_sites_searcher.service.WebSiteService;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -18,8 +15,8 @@ public class WebSiteServiceImpl implements WebSiteService {
     private final WebSiteStorage webSiteStorage;
 
     @Override
-    public Set<WebSite> incomeNewWebSites(List<String> urls) {
-        Set<String> newCheckedUrls = checkWebSiteExist(urls);
+    public List<WebSite> incomeNewWebSites(List<String> urls) {
+        List<String> newCheckedUrls = checkWebSiteExist(urls);
         if (!newCheckedUrls.isEmpty()) {
             return createWebSite(newCheckedUrls);
         } else {
@@ -45,8 +42,8 @@ public class WebSiteServiceImpl implements WebSiteService {
      * @return - возвращаем сет из url, которых нет в БД.
      */
     @Override
-    public Set<String> checkWebSiteExist(List<String> urls) {
-        Set<String> incomeWebSiteNames = new HashSet<>(urls);
+    public List<String> checkWebSiteExist(List<String> urls) {
+        List<String> incomeWebSiteNames = new ArrayList<>(urls);
         List<String> webSiteNames = webSiteStorage.findAll().stream().map(WebSite::getName).toList();
         webSiteNames.forEach(incomeWebSiteNames::remove);
         return incomeWebSiteNames;
@@ -71,8 +68,8 @@ public class WebSiteServiceImpl implements WebSiteService {
     }
 
     @Override
-    public Set<WebSite> createWebSite(Set<String> urls) {
-        Set<WebSite> newWebSites = new HashSet<>();
+    public List<WebSite> createWebSite(List<String> urls) {
+        List<WebSite> newWebSites = new ArrayList<>();
         for (String url : urls) {
             WebSite webSite = createWebSite(url, "none");
             newWebSites.add(webSite);
@@ -94,7 +91,7 @@ public class WebSiteServiceImpl implements WebSiteService {
     }
 
     @Override
-    public Set<WebSite> saveWebSite(Set<WebSite> newWebSites) {
+    public List<WebSite> saveWebSite(List<WebSite> newWebSites) {
         webSiteStorage.saveAll(newWebSites);
         return newWebSites;
     }
