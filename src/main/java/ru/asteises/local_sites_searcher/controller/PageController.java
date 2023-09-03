@@ -6,15 +6,20 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.asteises.local_sites_searcher.core.model.Page;
 import ru.asteises.local_sites_searcher.service.PageService;
+import ru.asteises.local_sites_searcher.service.SearchService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController()
-@RequestMapping("/api/search")
+@RequestMapping("/api/page")
 @AllArgsConstructor
 public class PageController {
+
+    private final SearchService searchService;
 
     private final PageService pageService;
 
@@ -36,11 +41,23 @@ public class PageController {
 
     /**
      * Метод ищет нужное словосочетание по заголовку (title) страницы сайта.
+     *
      * @return возвращаем заголовок.
      * @throws IOException Внимание!
      */
     @PostMapping("/in_title")
-    public ResponseEntity<List<String>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) throws IOException {
-        return ResponseEntity.ok(pageService.searchInTitle(urls, word));
+    public ResponseEntity<List<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
+        return ResponseEntity.ok(searchService.search(urls, word));
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> renewPagesDataBase(@RequestBody List<UUID> webSitesIds) {
+        pageService.renewPagesDataBase(webSitesIds);
+        return ResponseEntity.ok("Everything OK");
+    }
+
+    @GetMapping("/get")
+    public ResponseEntity<List<String>> testConn(@RequestParam String id) {
+        return ResponseEntity.ok(pageService.getAnchors(id));
     }
 }
