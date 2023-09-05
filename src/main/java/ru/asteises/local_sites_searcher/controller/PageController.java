@@ -20,7 +20,6 @@ import java.util.UUID;
 public class PageController {
 
     private final SearchService searchService;
-
     private final PageService pageService;
 
     // TODO Можно сохранять данные о сайтах в БД, чтобы было проще искать по ним информацию. Правда как потом проверять, не произошли ли изменения на странице.
@@ -43,7 +42,6 @@ public class PageController {
      * Метод ищет нужное словосочетание по заголовку (title) страницы сайта.
      *
      * @return возвращаем заголовок.
-     * @throws IOException Внимание!
      */
     @PostMapping("/in_title")
     public ResponseEntity<List<Page>> getDataFromTitle(@RequestBody List<String> urls, @RequestParam String word) {
@@ -51,13 +49,8 @@ public class PageController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> renewPagesDataBase(@RequestBody List<UUID> webSitesIds) {
-        pageService.renewPagesDataBase(webSitesIds);
+    public ResponseEntity<String> renewPagesDataBase(@RequestBody UUID webSitesId) {
+        pageService.renewPagesDataBase(webSitesId);
         return ResponseEntity.ok("Everything OK");
-    }
-
-    @GetMapping("/get")
-    public ResponseEntity<List<String>> testConn(@RequestParam String id) {
-        return ResponseEntity.ok(pageService.getAnchors(id));
     }
 }
