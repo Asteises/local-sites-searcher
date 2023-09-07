@@ -1,5 +1,7 @@
 # local-sites-searcher
 
+... in process ...
+
 RESTful API приложение на Spring Boot, которое предоставляет простой поиск по сайту.
 
 1. Парсинг на JSOUP сохраняет в базу данных (PostgreSQL) страницы сайта.
