@@ -1,6 +1,6 @@
 # local-sites-searcher
 
-... in process ...
+... in development ...
 
 RESTful API приложение на Spring Boot, которое предоставляет простой поиск по сайту.
 
