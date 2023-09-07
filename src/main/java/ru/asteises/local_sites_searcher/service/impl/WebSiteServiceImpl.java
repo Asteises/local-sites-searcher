@@ -2,6 +2,7 @@ package ru.asteises.local_sites_searcher.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.asteises.local_sites_searcher.core.model.Page;
 import ru.asteises.local_sites_searcher.core.model.WebSite;
 import ru.asteises.local_sites_searcher.repo.WebSiteStorage;
 import ru.asteises.local_sites_searcher.service.WebSiteService;
@@ -22,6 +23,11 @@ public class WebSiteServiceImpl implements WebSiteService {
         } else {
             throw new RuntimeException("All urls already exist");
         }
+    }
+
+    @Override
+    public WebSite getWebSiteById(UUID id) {
+        return webSiteStorage.findById(id).orElseThrow(() -> new RuntimeException("WebSite not found"));
     }
 
     /**
@@ -94,5 +100,12 @@ public class WebSiteServiceImpl implements WebSiteService {
     public List<WebSite> saveWebSite(List<WebSite> newWebSites) {
         webSiteStorage.saveAll(newWebSites);
         return newWebSites;
+    }
+
+    @Override
+    public List<String> getPagesAnchors(WebSite webSite) {
+        return webSite.getPages().stream()
+                .map(Page::getPath)
+                .toList();
     }
 }
